@@ -26,7 +26,7 @@ class Update extends CI_Controller {
         $this->users_directory = "users/";
         $this->path = getcwd();
         $this->uploaddir = '/src/images/';
-        $this->uploadnow = '../ci/src/images/';
+        $this->uploadnow = '../towny/src/images/';
         $this->objOfJwt = new ImplementJwt();
         $this->received_Token = $this->input->request_headers('Authorization');
         $this->status_404 = "No data found";
