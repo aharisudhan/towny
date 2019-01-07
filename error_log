@@ -1,0 +1,56 @@
+[03-Aug-2018 18:56:15 Etc/GMT] PHP Fatal error:  Class 'Model' not found in /home/shopc3ho/public_html/ci/application/models/HomeModel.php on line 2
+[03-Aug-2018 18:57:40 Etc/GMT] PHP Fatal error:  Call to a member function select() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/UserRetrive.php on line 12
+[06-Aug-2018 16:59:48 Etc/GMT] PHP Fatal error:  Call to a member function database() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 18
+[06-Aug-2018 17:00:28 Etc/GMT] PHP Fatal error:  Call to a member function database() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 18
+[05-Sep-2018 19:03:49 Etc/GMT] PHP Parse error:  syntax error, unexpected '&&' (T_BOOLEAN_AND), expecting ')' in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 27
+[08-Sep-2018 12:17:26 Etc/GMT] PHP Fatal error:  Call to undefined method CI_Loader::query() in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 22
+[09-Sep-2018 19:41:39 Etc/GMT] PHP Parse error:  syntax error, unexpected '[' in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 34
+[15-Sep-2018 15:41:05 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 134
+[15-Sep-2018 15:41:41 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 134
+[15-Sep-2018 15:43:20 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 134
+[15-Sep-2018 15:43:25 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 134
+[15-Sep-2018 15:44:04 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 134
+[15-Sep-2018 15:45:40 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 132
+[15-Sep-2018 15:52:25 Etc/GMT] PHP Fatal error:  Call to a member function close() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 132
+[15-Sep-2018 15:53:30 Etc/GMT] PHP Fatal error:  Call to a member function close() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 132
+[15-Sep-2018 15:54:18 Etc/GMT] PHP Fatal error:  Call to undefined function close() in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 132
+[11-Oct-2018 11:37:36 Etc/GMT] PHP Fatal error:  Can't use function return value in write context in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 161
+[11-Oct-2018 11:41:58 Etc/GMT] PHP Fatal error:  Can't use function return value in write context in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 161
+[22-Oct-2018 07:16:29 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 76
+[22-Oct-2018 07:16:30 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 76
+[10-Nov-2018 07:12:08 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 65
+[10-Nov-2018 12:11:37 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 281
+[10-Nov-2018 12:30:02 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 280
+[10-Nov-2018 14:50:22 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 165
+[11-Nov-2018 07:36:28 Etc/GMT] PHP Fatal error:  Call to a member function format() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Update.php on line 63
+[13-Nov-2018 17:45:12 Etc/GMT] PHP Parse error:  syntax error, unexpected ')' in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 165
+[21-Nov-2018 03:36:35 Etc/GMT] PHP Parse error:  syntax error, unexpected '','' (T_CONSTANT_ENCAPSED_STRING) in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 186
+[21-Nov-2018 04:39:47 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 207
+[21-Nov-2018 04:40:30 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 207
+[21-Nov-2018 04:40:49 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 207
+[23-Nov-2018 08:25:03 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 306
+[23-Nov-2018 08:25:33 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 306
+[24-Nov-2018 07:16:54 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 340
+[24-Nov-2018 07:17:16 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 340
+[24-Nov-2018 07:18:32 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 340
+[24-Nov-2018 07:21:15 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 340
+[24-Nov-2018 10:16:05 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 205
+[24-Nov-2018 13:44:44 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 203
+[25-Nov-2018 04:07:14 Etc/GMT] PHP Fatal error:  Call to a member function result_array() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Update.php on line 197
+[27-Nov-2018 18:00:01 Etc/GMT] PHP Parse error:  syntax error, unexpected 'estecho' (T_STRING) in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 55
+[27-Nov-2018 18:00:18 Etc/GMT] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 55
+[27-Nov-2018 19:03:09 Etc/GMT] PHP Parse error:  syntax error, unexpected '{' in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 65
+[27-Nov-2018 19:03:10 Etc/GMT] PHP Parse error:  syntax error, unexpected '{' in /home/shopc3ho/public_html/ci/application/controllers/Insert.php on line 65
+[28-Nov-2018 03:31:16 Etc/GMT] PHP Parse error:  syntax error, unexpected 'public' (T_PUBLIC) in /home/shopc3ho/public_html/ci/application/controllers/Update.php on line 78
+[19-Dec-2018 17:14:21 Etc/GMT] PHP Fatal error:  Cannot use [] for reading in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 68
+[20-Dec-2018 04:31:22 Etc/GMT] PHP Parse error:  syntax error, unexpected ';', expecting ')' in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 573
+[20-Dec-2018 04:31:34 Etc/GMT] PHP Parse error:  syntax error, unexpected ';' in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 573
+[20-Dec-2018 04:54:14 Etc/GMT] PHP Fatal error:  Cannot use [] for reading in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 314
+[20-Dec-2018 18:00:46 Etc/GMT] PHP Parse error:  syntax error, unexpected ',' in /home/shopc3ho/public_html/ci/application/controllers/Retrive.php on line 503
+[21-Dec-2018 15:18:54 Etc/GMT] PHP Fatal error:  Call to undefined method CI_Loader::libraries() in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:19:14 Etc/GMT] PHP Fatal error:  Call to undefined method CI_Loader::libraries() in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:20:42 Etc/GMT] PHP Fatal error:  Call to undefined method CI_Loader::libraries() in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:20:46 Etc/GMT] PHP Fatal error:  Call to undefined method CI_Loader::libraries() in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:25:08 Etc/GMT] PHP Fatal error:  Call to a member function libraries() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:26:02 Etc/GMT] PHP Fatal error:  Call to a member function libraries() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 18
+[21-Dec-2018 15:28:07 Etc/GMT] PHP Fatal error:  Call to a member function library() on a non-object in /home/shopc3ho/public_html/ci/application/controllers/Login.php on line 20
