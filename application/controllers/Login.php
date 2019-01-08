@@ -9,11 +9,11 @@ class Login extends CI_Controller {
         parent::__construct();
         error_reporting(0);
          $abcd = array(
-          'hostname' => 'localhost',
-          'username' => 'root',
-          'password' => '',
-          'database' => 'shopc3ho_igni810',
-          'dbdriver' => 'mysqli'
+			'hostname' => 'localhost',
+			'username' => 'shopc3ho_igni810',
+			'password' => 'p8E1cS4--0',
+			'database' => 'shopc3ho_igni810',
+			'dbdriver' => 'mysqli'
         ); 
         $this->connect_db = $this->load->database($abcd, true);
         $this->load->library('auth_lib');

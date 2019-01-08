@@ -4,10 +4,6 @@ require APPPATH . '/libraries/ImplementJwt.php';
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-//status : success
-//statusCode : 200
-//error : false
-//offer_type_id
 
 class Retrive extends CI_Controller {
 
@@ -48,7 +44,7 @@ class Retrive extends CI_Controller {
         echo "Lodding................";
     }
 
-//change as done in myprofile --> myProfile
+//change made myprofile ==> myProfile
     public function getMyProfile() {
         $response = array();
         $response["error"] = false;
@@ -145,7 +141,7 @@ class Retrive extends CI_Controller {
         $response = array();
         $response["error"] = false;
         $response["myPostAds"] = array();
-        $selectquery = "SELECT `post_ads`.*,`categories`.`category_name`,`shops`.`shop_name` FROM `post_ads`,`shops`,`categories`,`keywords` WHERE post_ads.ads_status = 0 AND `post_ads`.`category_id` = `categories`.`category_id` AND `post_ads`.`shop_id` = `shops`.`shop_id` AND `post_ads`.`offer_id`=`keywords`.`key_id` AND `post_ads`.`user_id` =" . urldecode($this->jwt_user_id);
+        $selectquery = "SELECT `post_ads`.*,`categories`.`category_name`,`shops`.`shop_name` FROM `post_ads`,`shops`,`categories`,`keywords` WHERE  `post_ads`.`category_id` = `categories`.`category_id` AND `post_ads`.ads_status = 0 AND `shops`.shop_status = 0 AND `categories`.status = 0 AND `keywords`.key_status = 0 AND `post_ads`.`shop_id` = `shops`.`shop_id` AND `post_ads`.`offer_id`=`keywords`.`key_id` AND `post_ads`.`user_id` =" . urldecode($this->jwt_user_id);
         $Catresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Catresults) > 0) {
             foreach ($Catresults as $skeys) {
@@ -271,15 +267,16 @@ class Retrive extends CI_Controller {
                         * sin( radians( `shop_latitude` ))
                         )
                         ) AS distance
-                        FROM shops,post_ads,offers,keywords WHERE shops.shop_id = post_ads.shop_id AND post_ads.offer_id = offers.offer_id  AND post_ads.ads_status = 0 AND offers.status = 0 AND keywords.key_id = offers.offer_name GROUP BY post_ads.offer_id 
+                        FROM shops,post_ads,offers,keywords WHERE shops.shop_id = post_ads.shop_id AND `shops`.shop_status = 0 AND post_ads.offer_id = offers.offer_id  AND post_ads.ads_status = 0 AND `keywords`.key_status = 0 AND offers.status = 0 AND keywords.key_id = offers.offer_name GROUP BY post_ads.offer_id 
                         HAVING distance <" . urldecode($_GET['rad']) . " ORDER BY distance asc";
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Cresults) > 0) {
             foreach ($Cresults as $skeys) {
+                $imgsarray[] = json_decode($skeys['offer_img']);
                 $this->res_disp_goffer[] = array(
                     'offer_id' => $skeys['offer_id'],
                     'offer_name' => $skeys['offer_name'],
-                    'offer_img' => $skeys['offer_img'],
+                    'offer_img' => $imgsarray[0],
                     'offer_description' => $skeys['description'],
                     'offer_extended_description' => $skeys['extended_description'],
                     'offer_basepath' => $skeys['offer_fpath'],
@@ -314,7 +311,7 @@ class Retrive extends CI_Controller {
        , categories.category_id, keywords.key_name as offer_name, offers.description, offers.extended_description, offers.offer_img, offers.offer_fpath
        , categories.category_name, ( 3959 * acos ( cos ( radians(" . urldecode($_GET['lat']) . ")) * cos( radians( `shop_latitude` )) * cos( radians( `shop_longitude` ) - radians(" . urldecode($_GET['long']) . ") ) + sin ( radians(" . urldecode($_GET['lat']) . ") ) * sin( radians( `shop_latitude` )) ) ) AS distance 
            FROM shops, post_ads, offers, keywords, categories WHERE shops.shop_id = post_ads.shop_id AND categories.category_id = post_ads.category_id AND post_ads.offer_id      = offers.offer_id
-         AND offers.status = 0 AND categories.status = 0 AND post_ads.ads_status    = 0 AND shops.shop_status = 0  AND keywords.key_id        = offers.offer_name
+         AND offers.status = 0 AND categories.status = 0 AND post_ads.ads_status    = 0 AND shops.shop_status = 0  AND keywords.key_id        = offers.offer_name AND `keywords`.key_status = 0
          AND post_ads.category_id   = " . urldecode($_GET['catid']) . " HAVING distance <" . urldecode($_GET['rad']) . " ORDER BY distance asc";
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Cresults) > 0) {
@@ -340,7 +337,7 @@ class Retrive extends CI_Controller {
             http_response_code('200');
             $response["status"] = $this->status_200;
             $response["statusCode"] = $this->status_code_200;
-            $response["myProfile"] = $this->res_myprofile;
+            $response["myProfile"] = $this->res_disp_gofferuc;
         } else {
             http_response_code('404');
             $response["status"] = $this->status_404;
@@ -430,7 +427,7 @@ class Retrive extends CI_Controller {
               )
               ) AS distance
               FROM shops,post_ads,categories
-              WHERE shops.shop_status=0 AND shops.shop_id = post_ads.shop_id GROUP BY shops.shop_id  
+              WHERE shops.shop_status=0 AND `post_ads`.ads_status = 0 AND `categories`.status = 0 AND shops.shop_id = post_ads.shop_id GROUP BY shops.shop_id  
               HAVING distance <" . urldecode($_GET['rad']) . " LIMIT 0,10";
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         foreach ($Cresults as $skeys) {
@@ -536,22 +533,26 @@ class Retrive extends CI_Controller {
         $response["offerDetails"] = array();
         $response["shopsDetails"] = array();
 
-        if (strlen($_GET['shop_id']) > 0 && strlen($this->jwt_user_id)) {
+        if (strlen($_GET['shop_id']) > 0) {
             $selectquery = "SELECT shops.shop_name,shops.shop_owner_name,shops.shop_img,shops.shop_fpath,shops.shop_description,categories.category_name as shop_category,shops.shop_latitude,shops.shop_longitude,shops.shop_rating,shops.shop_followers_count,shops.shop_reviews,shops.shop_reviews_count,shops.shop_phone,shops.shop_whatsapp,shops.shop_email,shops.shop_address,shops.shop_pincode FROM `shops`,`categories` WHERE shops.shop_category = categories.category_id AND shops.shop_id =" . urldecode($_GET['shop_id']);
-            $selectofferquery = "SELECT    `post_ads`.`offer_id`,`shops`.`shop_id`,`shops`.`shop_rating`,`shops`.`shop_name`,`offers`.`offer_expires`,`offers`.`description`,`offers`.`extended_description`
-                ,`offers`.`offer_img`,`offers`.`offer_fpath`,`keywords`.`key_name` as `offer_name`,`categories`.`category_id`,`categories`.`category_name`
-            FROM `shops`, `post_ads`, `offers`, `keywords`, `categories` WHERE `post_ads`.`category_id`= `categories`.`category_id` AND `shops`.`shop_id`= `post_ads`.`shop_id` AND `categories`.`category_id` = `post_ads`.`category_id`  AND `post_ads`.`offer_id = `offers`.`offer_id` AND `post_ads`.`ads_status = 0 AND `offers`.`status` = 0 AND `keywords`.`key_id` = `offers`.`offer_name` AND `post_ads`.`shop_id` =" . urldecode($_GET['shop_id']);
-            $floowerid = urldecode($this->jwt_user_id) . urldecode($_GET['shop_id']);
+            $selectofferquery =  "SELECT `post_ads`.`ads_id` as offer_id,post_ads.ads_img as offer_img,post_ads.ads_fpath as offer_fpath, shops.shop_rating, post_ads.ads_expires_on as offer_expires,post_ads.ads_description as description, post_ads.offer_id as offer_typeid,keywords.key_name as offer_typename, categories.category_name as category_name,post_ads.category_id as category_id  ,shops.shop_id,shops.shop_name,post_ads.product_name,post_ads.ads_type_id,post_ads.ads_name  as offer_name FROM post_ads,shops,categories,keywords,offers WHERE `shops`.shop_status = 0 AND `post_ads`.ads_status = 0 AND `offers`.status = 0 AND `keywords`.key_status = 0 AND `categories`.status = 0 AND categories.category_id = post_ads.category_id AND post_ads.offer_id = offers.offer_id AND keywords.key_id = offers.offer_name AND  post_ads.shop_id = ".urldecode($_GET['shop_id'])." AND shops.shop_id = " . urldecode($_GET['shop_id']);    
+            $floowerid = urldecode($_GET['user_id']) . urldecode($_GET['shop_id']);
             $selectexitsting = "SELECT * FROM `shop_follower` where fid =" . $floowerid;
-            $checkexits = $this->connect_db->query($selectexitsting)->result_array() [0];
-            if (!array_filter($checkexits) == []) {
+            $checkexits = $this
+                ->connect_db
+                ->query($selectexitsting)->result_array() [0];
+            if (!array_filter($checkexits) == [])
+            {
                 $follow_status = "yes";
-            } else {
+            }
+            else
+            {
                 $follow_status = "no";
             }
 
             $skeys = $this->connect_db->query($selectquery)->result_array() [0];
-            if (sizeof($skeys) > 0) {
+            if (sizeof($skeys) > 0)
+            {
                 $imgsarray[] = json_decode($skeys['shop_img']);
                 $this->res_gshopsdetails[] = array(
                     'shop_name' => $skeys['shop_name'],
@@ -574,20 +575,25 @@ class Retrive extends CI_Controller {
                     'shop_following' => $follow_status
                 );
                 $response["shopsDetails"] = $this->res_gshopsdetails;
-            } else {
+
+            }
+            else
+            {
                 $response["shopsDetails"] = 'shop is not found';
             }
             $Cofferresults = $this->connect_db->query($selectofferquery)->result_array();
-            foreach ($Cofferresults as $dkey) {
+            foreach ($Cofferresults as $dkey)
+            {
                 $imgsarray1[] = json_decode($dkey['offer_img']);
                 $this->res_shop_offer[] = array(
                     'offer_id' => $dkey['offer_id'],
                     'offer_name' => $dkey['offer_name'],
+                    'offer_typeid' => $dkey['offer_typeid'],
+                    'offer_typename' => $dkey['offer_typename'],
                     'offer_img' => $imgsarray1[0],
                     'category_id' => $dkey['category_id'],
                     'category_name' => $dkey['category_name'],
                     'offer_description' => $dkey['description'],
-                    'offer_extended_description' => $dkey['extended_description'],
                     'offer_basepath' => $dkey['offer_fpath'],
                     'offer_expires' => $dkey['offer_expires'],
                     'shop_name' => $dkey['shop_name'],
@@ -595,6 +601,7 @@ class Retrive extends CI_Controller {
                     'shop_rating' => $dkey['shop_rating'],
                     'distance' => is_null($dkey['distance']) ? "" : $dkey['distance']
                 );
+
             }
             http_response_code('200');
             $response["status"] = $this->status_200;
@@ -614,7 +621,7 @@ class Retrive extends CI_Controller {
         $response = array();
         $response["error"] = false;
         $response["myShops"] = array();
-        $selectquery = "SELECT shops.shop_whatsapp,shops.shop_id,shops.shop_name,shops.shop_img,shops.shop_fpath,shops.shop_description,shops.shop_category,shop_latitude,shops.shop_longitude,shops.shop_phone,shops.shop_email,shops.shop_address,categories.category_name,shops.shop_pincode,shops.shop_owner_name FROM `shops`,`categories` WHERE shops.shop_status = 0 AND shops.shop_category = categories.category_id AND shops.marchant_id =" . urldecode($this->jwt_user_id);
+        $selectquery = "SELECT shops.shop_whatsapp,shops.shop_id,shops.shop_name,shops.shop_img,shops.shop_fpath,shops.shop_description,shops.shop_category,shop_latitude,shops.shop_longitude,shops.shop_phone,shops.shop_email,shops.shop_address,categories.category_name,shops.shop_pincode,shops.shop_owner_name FROM `shops`,`categories` WHERE shops.shop_status = 0 AND shops.shop_category = categories.category_id AND `categories`.status = 0 AND shops.marchant_id =" . urldecode($this->jwt_user_id);
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Cresults) > 0) {
             foreach ($Cresults as $rkeys) {
@@ -667,7 +674,7 @@ class Retrive extends CI_Controller {
               )
               ) AS distance
               FROM shops,post_ads,categories
-              WHERE categories.status = 0 AND shops.shop_id = post_ads.shop_id AND post_ads.category_id = categories.category_id AND post_ads.offer_id =" . urldecode($_GET['offerid']) . " GROUP BY categories.category_id
+              WHERE categories.status = 0 AND `post_ads`.ads_status` = 0 AND `shops`.shop_status = 0 AND shops.shop_id = post_ads.shop_id AND post_ads.category_id = categories.category_id AND post_ads.offer_id =" . urldecode($_GET['offerid']) . " GROUP BY categories.category_id
               HAVING distance <" . urldecode($_GET['rad']);
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Cresults) > 0) {
@@ -704,14 +711,13 @@ class Retrive extends CI_Controller {
         $response = array();
         $response["error"] = false;
         $response["categoriesWithCount"] = array();
-        $selectquery = "SELECT COUNT(post_ads.ads_id) as offers_count , post_ads.category_id, categories.category_name as category_name, categories.category_img, categories.category_img_fpath, categories.category_description, categories.category_extended_description 
-            FROM shops, post_ads, categories WHERE categories.status = 0 AND shops.shop_status = 0 AND post_ads.ads_status = 0 AND shops.shop_id = post_ads.shop_id AND post_ads.category_id = categories.category_id AND post_ads.offer_id in (select x.offer_id from (select distinct post_ads.offer_id,( 3959 * acos ( cos ( radians(" . urldecode($_GET['lat']) . ")) * cos( radians( `shop_latitude` )) * cos( radians( `shop_longitude` ) - radians(" . urldecode($_GET['long']) . ") ) + sin ( radians(" . urldecode($_GET['lat']) . ") ) * sin( radians( `shop_latitude` )) ) ) AS distance from post_ads, shops where shops.shop_id = post_ads.shop_id and shops.shop_status = 0 HAVING  distance < " . urldecode($_GET['rad']) . ")x) 
-            GROUP BY categories.category_id";
+        $selectquery = "SELECT COUNT(post_ads.ads_id) as offers_count , post_ads.category_id, categories.category_name as category_name, categories.category_img, categories.category_img_fpath, categories.category_description, categories.category_extended_description FROM shops, post_ads, categories WHERE categories.status=0 AND shops.shop_status = 0 AND post_ads.ads_status = 0 AND shops.shop_id= post_ads.shop_id AND post_ads.category_id = categories.category_id AND post_ads.offer_id in (select x.offer_id from (select distinct post_ads.offer_id,( 3959 * acos ( cos ( radians(" . urldecode($_GET['lat']) . ")) * cos( radians( `shop_latitude` )) * cos( radians( `shop_longitude` ) - radians(" . urldecode($_GET['long']) . ") ) + sin ( radians(" . urldecode($_GET['lat']) . ") ) * sin( radians( `shop_latitude` )) ) ) AS distance from post_ads, shops where shops.shop_id = post_ads.shop_id and shops.shop_status = 0 HAVING  distance < " . urldecode($_GET['rad']).")x) GROUP BY categories.category_id"; 
         $Cresults = $this->connect_db->query($selectquery)->result_array();
-        foreach ($Cresults as $skeys) {
+        foreach ($Cresults as $skeys)
+        {
             $imgsarray[] = json_decode($skeys['category_img']);
             $this->res_disp_cw[] = array(
-                'count' => $skeys['shops_count'],
+                'count' => $skeys['offers_count'],
                 'category_id' => $skeys['category_id'],
                 'category_name' => $skeys['category_name'],
                 'category_img_name' => $imgsarray[0],
@@ -721,6 +727,7 @@ class Retrive extends CI_Controller {
                 'distance' => $skeys['distance']
             );
         }
+
         http_response_code('200');
         $response["status"] = $this->status_200;
         $response["statusCode"] = $this->status_code_200;
@@ -738,7 +745,7 @@ class Retrive extends CI_Controller {
         $selectquery = "SELECT COUNT(post_ads.offer_id) as offers_count , post_ads.category_id, categories.category_name as category_name
        , categories.category_img, categories.category_img_fpath, categories.category_description, categories.category_extended_description
        , ( 3959 * acos ( cos ( radians(" . urldecode($_GET['lat']) . ")) * cos( radians( `shop_latitude` )) * cos( radians( `shop_longitude` ) - radians(" . urldecode($_GET['long']) . ") ) + sin ( radians(" . urldecode($_GET['lat']) . ") ) * sin( radians( `shop_latitude` )) ) ) AS distance
-        FROM shops, post_ads, categories WHERE categories.status =0 AND shops.shop_id = post_ads.shop_id AND post_ads.category_id = categories.category_id GROUP BY categories.category_id HAVING distance <" . urldecode($_GET['rad']);
+        FROM shops, post_ads, categories WHERE categories.status =0 AND `post_ads`.ads_status = 0 AND `shops`.shop_status = 0 AND shops.shop_id = post_ads.shop_id AND post_ads.category_id = categories.category_id GROUP BY categories.category_id HAVING distance <" . urldecode($_GET['rad']);
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         foreach ($Cresults as $skeys) {
             $this->res_disp_cw[] = array(
@@ -833,7 +840,7 @@ class Retrive extends CI_Controller {
         $response = array();
         $response["error"] = false;
         $response["storeDetails"] = array();
-        $selectquery = "SELECT shops.*, categories.category_name  FROM `shops`,`categories` WHERE shops.shop_category = categories.category_id AND shops.shop_status=0";
+        $selectquery = "SELECT shops.*, categories.category_name  FROM `shops`,`categories` WHERE shops.shop_category = categories.category_id AND `categories`.status = 0 AND shops.shop_status=0";
         if (!empty($_GET['searchshop'])) {
             $selectquery .= " AND shops.shop_name LIKE '%" . urldecode($_GET['searchshop']) . "%'";
         }
@@ -859,7 +866,7 @@ class Retrive extends CI_Controller {
         $response["error"] = false;
         $response["singleAd"] = array();
         if ($this->jwt_user_id != NULL && strlen($this->jwt_user_id) > 0 && $_GET['ads_id'] != NULL && strlen($_GET['ads_id']) > 0) {
-            $selectquery = "SELECT post_ads.`offer_id`,post_ads.`product_name`, post_ads.`category_id`, post_ads.`shop_id`, post_ads.`ads_name`, post_ads.`ads_description`, post_ads.`ads_img`, post_ads.`user_id`,post_ads.`ads_fpath`,post_ads.`ads_type_id`,post_ads.`ads_type_discount_id`,post_ads.`ads_original_price`,post_ads.`ads_discount_price`,post_ads.`ads_show_from`,post_ads.`ads_expires_on`,keywords.key_name as offer_name, categories.category_name, shops.shop_name,keywords2.key_name as ads_type,users.user_name FROM post_ads,keywords2,keywords,categories,shops,users WHERE categories.category_id = post_ads.category_id AND keywords.key_id = post_ads.offer_id AND shops.shop_id = post_ads.shop_id AND users.user_id = post_ads.user_id AND keywords2.key_id = post_ads.ads_type_id AND post_ads.ads_id = " . $_GET['ads_id'] . " AND post_ads.user_id = " . $this->jwt_user_id;
+            $selectquery = "SELECT post_ads.`offer_id`,post_ads.`product_name`, post_ads.`category_id`, post_ads.`shop_id`, post_ads.`ads_name`, post_ads.`ads_description`, post_ads.`ads_img`, post_ads.`user_id`,post_ads.`ads_fpath`,post_ads.`ads_type_id`,post_ads.`ads_type_discount_id`,post_ads.`ads_original_price`,post_ads.`ads_discount_price`,post_ads.`ads_show_from`,post_ads.`ads_expires_on`,keywords.key_name as offer_name, categories.category_name, shops.shop_name,keywords2.key_name as ads_type,users.user_name FROM post_ads,keywords2,keywords,categories,shops,users  WHERE categories.category_id = post_ads.category_id  AND `post_ads`.ads_status = 0 AND keywords.key_id = post_ads.offer_id AND `shops`.shop_status = 0 AND shops.shop_id = post_ads.shop_id AND users.user_id = post_ads.user_id AND `users`.user_status = 0 AND `keywords2`.key_status = 0 AND `categories`.status = 0 AND `keywords`.key_status = 0 AND keywords2.key_id = post_ads.ads_type_id AND post_ads.ads_id = " . $_GET['ads_id'] . " AND post_ads.user_id = " . $this->jwt_user_id;
             $rkey = $this->connect_db->query($selectquery)->result_array()[0];
             if (sizeof($rkey) > 0) {
                 $imgsarray[] = json_decode($rkey['ads_img']);
@@ -910,7 +917,7 @@ class Retrive extends CI_Controller {
         $response = array();
         $response["error"] = false;
         $response["shopsFollowedByUser"] = array();
-        $selectquery = "SELECT `shop_follower`.`shop_id`,`shops`.`shop_name`,`shops`.`shop_owner_name`,`shops`.`shop_img`,`shops`.`shop_fpath`,`shops`.`marchant_id`,`shops`.`shop_description`,`shops`.`shop_category`,`shops`.`shop_latitude`,`shops`.`shop_longitude`,`shops`.`shop_rating`,`shops`.`shop_followers_count`,`shops`.`shop_phone`,`shops`.`shop_whatsapp`,`shops`.`shop_address`,`shops`.`shop_pincode`,`categories`.`category_name` FROM `shop_follower`,`categories`,`shops` WHERE `shop_follower`.fs_status = 0 AND `shops`.shop_id = `shop_follower`.shop_id AND `shops`.`shop_category` = `categories`.`category_id` AND `shop_follower`.user_id =" . urldecode($this->jwt_user_id);
+        $selectquery = "SELECT `shop_follower`.`shop_id`,`shops`.`shop_name`,`shops`.`shop_owner_name`,`shops`.`shop_img`,`shops`.`shop_fpath`,`shops`.`marchant_id`,`shops`.`shop_description`,`shops`.`shop_category`,`shops`.`shop_latitude`,`shops`.`shop_longitude`,`shops`.`shop_rating`,`shops`.`shop_followers_count`,`shops`.`shop_phone`,`shops`.`shop_whatsapp`,`shops`.`shop_address`,`shops`.`shop_pincode`,`categories`.`category_name` FROM `shop_follower`,`categories`,`shops` WHERE `shop_follower`.fs_status = 0 AND `shops`.shop_id = `shop_follower`.shop_id AND `categories`.status = 0 AND `shops`.shop_status = 0 AND `shops`.`shop_category` = `categories`.`category_id` AND `shop_follower`.user_id =" . urldecode($this->jwt_user_id);
         $Cresults = $this->connect_db->query($selectquery)->result_array();
         if (sizeof($Cresults) > 0) {
             foreach ($Cresults as $rkeys) {
